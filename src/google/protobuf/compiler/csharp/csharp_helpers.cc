@@ -271,7 +271,10 @@ std::string TryRemovePrefix(const std::string& prefix, const std::string& value)
 // - Convert to PascalCase.
 // For example, an enum called Color with a value of COLOR_BLUE should
 // result in an enum value in C# called just Blue
-std::string GetEnumValueName(const std::string& enum_name, const std::string& enum_value_name) {
+std::string GetEnumValueName(const std::string& enum_name, const std::string& enum_value_name, const Options* options) {
+  if (options->preserve_enums.find(enum_name) != options->preserve_enums.end()) {
+    return enum_value_name;
+  }
   std::string stripped = TryRemovePrefix(enum_name, enum_value_name);
   std::string result = ShoutyToPascalCase(stripped);
   // Just in case we have an enum name of FOO and a value of FOO_2... make sure the returned

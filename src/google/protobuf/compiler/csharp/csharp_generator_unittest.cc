@@ -31,6 +31,7 @@
 #include <memory>
 
 #include <google/protobuf/compiler/command_line_interface.h>
+#include <google/protobuf/compiler/csharp/csharp_options.h>
 #include <google/protobuf/compiler/csharp/csharp_helpers.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/io/printer.h>
@@ -46,21 +47,26 @@ namespace csharp {
 namespace {
 
 TEST(CSharpEnumValue, PascalCasedPrefixStripping) {
-  EXPECT_EQ("Bar", GetEnumValueName("Foo", "BAR"));
-  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "BAR_BAZ"));
-  EXPECT_EQ("Bar", GetEnumValueName("Foo", "FOO_BAR"));
-  EXPECT_EQ("Bar", GetEnumValueName("Foo", "FOO__BAR"));
-  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "FOO_BAR_BAZ"));
-  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "Foo_BarBaz"));
-  EXPECT_EQ("Bar", GetEnumValueName("FO_O", "FOO_BAR"));
-  EXPECT_EQ("Bar", GetEnumValueName("FOO", "F_O_O_BAR"));
-  EXPECT_EQ("Bar", GetEnumValueName("Foo", "BAR"));
-  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "BAR_BAZ"));
-  EXPECT_EQ("Foo", GetEnumValueName("Foo", "FOO"));
-  EXPECT_EQ("Foo", GetEnumValueName("Foo", "FOO___"));
+  struct Options options;
+  options.preserve_enums.insert("Bar");
+  EXPECT_EQ("Bar", GetEnumValueName("Foo", "BAR", &options));
+  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "BAR_BAZ", &options));
+  EXPECT_EQ("Bar", GetEnumValueName("Foo", "FOO_BAR", &options));
+  EXPECT_EQ("Bar", GetEnumValueName("Foo", "FOO__BAR", &options));
+  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "FOO_BAR_BAZ", &options));
+  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "Foo_BarBaz", &options));
+  EXPECT_EQ("Bar", GetEnumValueName("FO_O", "FOO_BAR", &options));
+  EXPECT_EQ("Bar", GetEnumValueName("FOO", "F_O_O_BAR", &options));
+  EXPECT_EQ("Bar", GetEnumValueName("Foo", "BAR", &options));
+  EXPECT_EQ("BarBaz", GetEnumValueName("Foo", "BAR_BAZ", &options));
+  EXPECT_EQ("Foo", GetEnumValueName("Foo", "FOO", &options));
+  EXPECT_EQ("Foo", GetEnumValueName("Foo", "FOO___", &options));
   // Identifiers can't start with digits
-  EXPECT_EQ("_2Bar", GetEnumValueName("Foo", "FOO_2_BAR"));
-  EXPECT_EQ("_2", GetEnumValueName("Foo", "FOO___2"));
+  EXPECT_EQ("_2Bar", GetEnumValueName("Foo", "FOO_2_BAR", &options));
+  EXPECT_EQ("_2", GetEnumValueName("Foo", "FOO___2", &options));
+  // Preserve requested enum
+  EXPECT_EQ("FOO", GetEnumValueName("Bar", "FOO", &options));
+  EXPECT_EQ("FOO_BAR", GetEnumValueName("Bar", "FOO_BAR", &options));
 }
 
 }  // namespace

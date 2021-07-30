@@ -32,6 +32,7 @@
 #define GOOGLE_PROTOBUF_COMPILER_CSHARP_OPTIONS_H__
 
 #include <string>
+#include <set>
 
 namespace google {
 namespace protobuf {
@@ -45,7 +46,8 @@ struct Options {
       base_namespace(""),
       base_namespace_specified(false),
       internal_access(false),
-      serializable(false) {
+      serializable(false),
+      preserve_enums() {
   }
   // Extension of the generated file. Defaults to ".cs"
   std::string file_extension;
@@ -71,6 +73,8 @@ struct Options {
   // Whether the generated classes should have a global::System.Serializable attribute added
   // Defaults to false
   bool serializable;
+  // Set of enums where naming should be preserved
+  std::set<std::string> preserve_enums;
 };
 
 }  // namespace csharp

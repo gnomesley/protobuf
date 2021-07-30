@@ -102,7 +102,8 @@ std::string UnderscoresToPascalCase(const std::string& input);
 // Note that we wouldn't normally want to export this (we're not expecting
 // it to be used outside libprotoc itself) but this exposes it for testing.
 std::string PROTOC_EXPORT GetEnumValueName(const std::string& enum_name,
-                                           const std::string& enum_value_name);
+                                           const std::string& enum_value_name,
+                                           const Options* options);
 
 // TODO(jtattermusch): perhaps we could move this to strutil
 std::string StringToBase64(const std::string& input);

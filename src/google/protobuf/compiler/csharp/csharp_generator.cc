@@ -75,6 +75,8 @@ bool Generator::Generate(
       cli_options.internal_access = true;
     } else if (options[i].first == "serializable") {
       cli_options.serializable = true;
+    } else if (options[i].first == "preserve_enum") {
+      cli_options.preserve_enums.insert(options[i].second);
     } else {
       *error = "Unknown generator option: " + options[i].first;
       return false;
